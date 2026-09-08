@@ -11,14 +11,14 @@ int main() {
     sw_in_init();
 
     while (true) {
-        s1 = sw_in_read1();
+        sw1 = sw_in_read1();
         sw2 = sw_in_read2();
 
-        if(s1 && s2) {
+        if(sw1 && sw2) {
             led_out_write(0xFF);
-        } else if(s1&& !s2) {
+        } else if(sw1&& !sw2) {
             led_out_write(0x01);
-        } else if(!s1 && s2) {
+        } else if(!sw1 && sw2) {
             led_out_write(0x80);
         } else {
             led_out_write(0x00);
