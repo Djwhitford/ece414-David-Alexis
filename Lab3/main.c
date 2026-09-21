@@ -2,27 +2,33 @@
 #include "pico/stdlib.h"
 #include "led_out.h"
 #include "sw_in.h"
+#include "pong_FSM.h"
+#include "debounce_sw1.h"
+#include "debounce_sw2.h"
+#include "timer.h"
+
 
 int main() {
     bool sw1, sw2;
-
-   stdio_init_all();
+    uint32_t last_debounce_time = 0;
+    
+    stdio_init_all();
     led_out_init();
     sw_in_init();
+    debounce_sw1_init();
+    debounce_sw2_init();
 
-    while (true) {
-        sw1 = sw_in_read1();
-        sw2 = sw_in_read2();
+    while (true){
+        uint32_t current_time = timer_read();
+        if (timer_elapsed_ms(last_debounce_time, current_time) >= DEBOUNCE_PD_MS) {
+            debounce_sw1_tick();
+            debounce_sw2_tick();
+            last_debounce_time = current_time;
+        }   
 
-        if(sw1 && sw2) {
-            led_out_write(0xFF);
-        } else if(sw1&& !sw2) {
-            led_out_write(0x01);
-        } else if(!sw1 && sw2) {
-            led_out_write(0x80);
-        } else {
-            led_out_write(0x00);
-        }
-        sleep_ms(10);
+        sw1 = debounce_sw1_pressed();
+        sw2 = debounce_sw2_pressed();
+
+        pong_FSM(sw1, sw2);
     }
 }
