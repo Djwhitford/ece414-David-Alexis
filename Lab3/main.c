@@ -29,6 +29,9 @@ int main() {
         sw1 = debounce_sw1_pressed();
         sw2 = debounce_sw2_pressed();
 
+       // printf("RAW: SW1=%d SW2=%d\n", sw_in_read1(), sw_in_read2());
+        //sleep_ms(500);
+
         pong_FSM(sw1, sw2);
     }
 }
