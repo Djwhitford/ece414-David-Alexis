@@ -12,6 +12,7 @@ target_sources(Lab3 PRIVATE
         debounce_sw1.c
 	debounce_sw2.c
         sw_in.c
+        led_out.c
         timer.c
         pong_FSM.c
 	main.c
