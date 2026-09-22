@@ -18,10 +18,12 @@ bool leftServe = false;
 state_t current_state = STATE_INIT;
 
 
-void pong_FSM(bool button1, bool button2){
+void pong_FSM(bool *button1, bool *button2){ //taking pointer to buttons for the latches
     uint32_t current_time = timer_read(); 
     switch(current_state) {
         case STATE_INIT:
+            *button1 = false; // Reset latch
+            *button2 = false; // Reset latch
             winner = 0;
             flashCount = 0;
             ballMoveDelay = 300;
@@ -38,10 +40,12 @@ void pong_FSM(bool button1, bool button2){
             }
             break;
         case SERVE_LEFT:
-            if(button1){
+            if(*button1){
+                *button1 = false; // Reset latch
                 current_state  = BALL_MOVING_RIGHT;
                 last_move_time = current_time;
-            } else if(button2){
+            } else if(*button2){
+                *button2 = false; // Reset latch
                 current_state  = FLASH_WINNER; // Right player pressed too early
                 last_flash_time = current_time;
                 winner = 1; // Left player wins
@@ -49,10 +53,12 @@ void pong_FSM(bool button1, bool button2){
             }
             break;
         case SERVE_RIGHT:
-            if(button2){
+            if(*button2){
+                *button2 = false; // Reset latch
                 current_state  = BALL_MOVING_LEFT;
                 last_move_time = current_time;
-            } else if(button1){
+            } else if(*button1){
+                *button1 = false; // Reset latch
                 current_state  = FLASH_WINNER; // Left player pressed too early
                 last_flash_time = current_time;
                 winner = 2; // Right player wins
@@ -60,7 +66,8 @@ void pong_FSM(bool button1, bool button2){
             }
             break;
         case BALL_MOVING_LEFT:
-            if (button1) {
+            if (*button1) {
+                *button1 = false; // Reset latch
                 if(ballPosition == 0){ //HIT
                     current_state = BALL_MOVING_RIGHT; // ball reached the left edge
                     if (ballMoveDelay > 100) {
@@ -86,7 +93,8 @@ void pong_FSM(bool button1, bool button2){
             }
             break;
         case BALL_MOVING_RIGHT:
-            if (button2) {
+            if (*button2) {
+                *button2 = false; // Reset latch
                 if(ballPosition == 7){ //HIT
                     current_state = BALL_MOVING_LEFT; // ball reached the right edge
                     if (ballMoveDelay > 100) {

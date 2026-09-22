@@ -10,7 +10,7 @@
 
  typedef enum{STATE_INIT, SERVE_RIGHT, SERVE_LEFT, BALL_MOVING_RIGHT, BALL_MOVING_LEFT, FLASH_WINNER } state_t;
 
- void pong_FSM(bool button1, bool button2); 
+ void pong_FSM(bool *button1, bool *button2); 
 
 #endif
  
