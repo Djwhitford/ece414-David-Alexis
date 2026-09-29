@@ -5,7 +5,7 @@
 
 
 #ifndef TS_LCD_H
-#define SW_LCD_H
+#define TS_LCD_H
 
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
@@ -15,7 +15,7 @@
  * Pin Assigments for toucscreen
  *  Y+ => GP27 (Pin 32)
  *  Y- => GP21 (Pin 27)
- *  X+ => GP22 (Pin 9)
+ *  X+ => GP22 (Pin 29)
  *  X- => GP26 (Pin 31)
  * 
  */
@@ -37,13 +37,13 @@
 /*
 *initalize the touchscreen
  */
-void tc_lcd_init(void);
+void ts_lcd_init(void);
 
 /*
 * Reads the touchscreen status and position 
 *returns true when the screen is touched. 
 *px and py contain the current position in LCD coordinates
 */
-bool get_ts_lcd(unit16_t * px, uint16_t * py)
+bool get_ts_lcd(uint16_t *px, uint16_t *py);
 
 #endif

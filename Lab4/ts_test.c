@@ -1,13 +1,16 @@
 #include "stdio.h"
 #include "pico/stdlib.h"
 #include "ts_lcd.h"
-#include "ts_lcd.h"
+#include "TFTMaster.h"
 
+#define CROSSHAIR_SIZE 10
 
 int main()
 {
     uint16_t x = 0;
     uint16_t y = 0;
+
+    char coord_text[40];
 
     // Initialize the LCD
     tft_init_hw();
@@ -32,9 +35,15 @@ int main()
         // Check if the touchscreen is being pressed
         if (get_ts_lcd(&x, &y))
         {
+            // Clear old coordinate text
+            tft_fillRect(0, 0, 320, 25, ILI9340_BLACK);
+
             // Display the coordinates
-            tft_setCursor(10, 10);
-            printf("X: %d  Y: %d\n", x, y);
+            snprintf(coord_text, sizeof(coord_text),
+                     "X: %u  Y: %u", x, y);
+
+            tft_setCursor(10, 5);
+            tft_writeString(coord_text);
 
             // Draw the 10 x 10 crosshair
             tft_fillRect(
