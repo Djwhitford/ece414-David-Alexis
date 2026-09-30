@@ -10,6 +10,10 @@ int main()
     uint16_t x = 0;
     uint16_t y = 0;
 
+    uint16_t old_x = 0;
+    uint16_t old_y = 0;
+    bool first_touch = true;
+
     char coord_text[40];
 
     // Initialize the LCD
@@ -17,7 +21,7 @@ int main()
     tft_begin();
 
     // Set LCD to 320 x 240
-    tft_gfx_setRotation(1);
+    tft_setRotation(3);
 
     // Initialize touchscreen
     ts_lcd_init();
@@ -35,6 +39,18 @@ int main()
         // Check if the touchscreen is being pressed
         if (get_ts_lcd(&x, &y))
         {
+            // Erase old crosshair
+            if (!first_touch)
+            {
+                tft_fillRect(
+                    old_x - CROSSHAIR_SIZE / 2,
+                    old_y - CROSSHAIR_SIZE / 2,
+                    CROSSHAIR_SIZE,
+                    CROSSHAIR_SIZE,
+                    ILI9340_BLACK
+                );
+            }
+
             // Clear old coordinate text
             tft_fillRect(0, 0, 320, 25, ILI9340_BLACK);
 
@@ -53,6 +69,10 @@ int main()
                 CROSSHAIR_SIZE,
                 ILI9340_RED
             );
+
+            old_x = x;
+            old_y = y;
+            first_touch = false;
         }
 
         sleep_ms(50);

@@ -166,11 +166,27 @@ bool get_ts_lcd(uint16_t *px, uint16_t *py)
     if (y > Y_MAX)
         y = Y_MAX;
 
-    *px = (uint16_t)(((x - X_MIN) * (LCD_WIDTH - 1)) /
-                     (X_MAX - X_MIN));
+    uint16_t old_px = (uint16_t)(((x - X_MIN) * (LCD_WIDTH - 1)) / (X_MAX - X_MIN));
+    uint16_t old_py = (uint16_t)(((y - Y_MIN) * (LCD_HEIGHT - 1)) / (Y_MAX - Y_MIN));
 
-    *py = (uint16_t)(((y - Y_MIN) * (LCD_HEIGHT - 1)) /
-                     (Y_MAX - Y_MIN));
+    int screen_x = old_py;
+    int screen_y = (LCD_HEIGHT - 1) - old_px;
+
+    screen_x = (screen_x - 24) * 319 / (206 - 24);
+    screen_y = (screen_y - 5) * 239 / (198 - 5);
+
+    if (screen_x < 0)
+        screen_x = 0;
+    if (screen_x > 319)
+        screen_x = 319;
+
+    if (screen_y < 0)
+        screen_y = 0;
+    if (screen_y > 239)
+        screen_y = 239;
+
+    *px = (uint16_t)screen_x;
+    *py = (uint16_t)screen_y;
 
     return true;
 }
