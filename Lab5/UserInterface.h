@@ -19,3 +19,5 @@ void displayButtons(void);
 //Updates the top display screen with an error message
 void displayError(void);
 
+#endif // USER_INTERFACE_H
+

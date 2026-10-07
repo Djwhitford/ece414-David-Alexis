@@ -13,13 +13,13 @@ pico_generate_pio_header(Lab5
 )
 
 target_sources(Lab5 PRIVATE
-    ts_test.c
     ts_lcd.c
     TouchScreen.c
     TFTMaster.c
     glcdfont.c
     Calc_FSM.c
     UserInterface.c
+    main.c
 )
 
 target_link_libraries(Lab5 PRIVATE

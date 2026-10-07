@@ -1,4 +1,4 @@
-// Padded and checksummed version of: C:/Users/dj17w/Documents/pico/ece414-David-Alexis/Lab2/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
+// Padded and checksummed version of: C:/Users/whitford/Documents/pico/ece414-David-Alexis/Lab2/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
 
 .cpu cortex-m0plus
 .thumb

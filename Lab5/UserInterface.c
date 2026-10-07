@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "TFTMaster.h"
 #include "userInterface.h"
+#include "TouchScreen.h"
 
 // toushcreen calibration, to be changed later
 #define TS_MINX 150
@@ -23,7 +24,7 @@ typedef struct {
    int w;
    int h;
    int label;
-}
+} Button;
 
 //button array
 static const Button buttons[16] = {
@@ -105,10 +106,10 @@ void displayButtons(){
     tft_fillRect(150, 145, 60, 40, ILI9340_WHITE);  //3
     tft_fillRect(220, 145, 60, 40, ILI9340_GREEN);  //*
 
-    tft_fillRect(10, 210, 60, 40, ILI9340_WHITE); //0
-    tft_fillRect(150, 210, 60, 40, ILI9340_RED); //C
-    tft_fillRect(80, 210, 60, 40, ILI9340_BLUE); //=
-    tft_fillRect(220, 210, 60, 40, ILI9340_GREEN); // /
+    tft_fillRect(10, 195, 60, 40, ILI9340_WHITE); //0
+    tft_fillRect(150, 195, 60, 40, ILI9340_RED); //C
+    tft_fillRect(80, 195, 60, 40, ILI9340_BLUE); //=
+    tft_fillRect(220, 195, 60, 40, ILI9340_GREEN); // /
 
    tft_setTextSize(3);
    tft_setTextColor(ILI9340_BLACK);
@@ -122,7 +123,7 @@ void displayButtons(){
    tft_setCursor(32, 105);  tft_writeString("4");
    tft_setCursor(102, 105); tft_writeString("5");
    tft_setCursor(172, 105); tft_writeString("6");
-   tft_setCursor(242, 105); tft_writeString("-");
+   tft_setCursor(242, 105); tft_writeString("-"); 
    //third row labels
    tft_setCursor(32, 155);  tft_writeString("1");
    tft_setCursor(102, 155); tft_writeString("2");
@@ -134,6 +135,8 @@ void displayButtons(){
    tft_setTextColor(ILI9340_WHITE);
    tft_setCursor(102, 205); tft_writeString("C");
    tft_setCursor(172, 205); tft_writeString("=");
+
+   
    
 }
 
