@@ -3,6 +3,8 @@
 * David and Alexis
 */
 #include <stdio.h>
+#include <stdbool.h>
+#include "ts_lcd.h"
 #include <stdint.h>
 #include "TFTMaster.h"
 #include "userInterface.h"
@@ -54,27 +56,52 @@ static const Button buttons[16] = {
 };
 
 //Returns which button (if any) was pressed.
-int getButton(){
-   struct TSPoint p;
-   getPoint(&p);
 
-   if (p.z > 0) {
-      int pixelX = (p.x - TS_MINX) * SCREEN_WIDTH / (TS_MAXX - TS_MINX);
-      int pixelY = (p.y - TS_MINY) * SCREEN_HEIGHT / (TS_MAXY - TS_MINY);
 
-      // Check which button area was touched
-      for (int i = 0; i < 16; i++) {
-         if (pixelX >= buttons[i].x && pixelX <= (buttons[i].x + buttons[i].w) &&
-               pixelY >= buttons[i].y && pixelY <= (buttons[i].y + buttons[i].h)) {
-               return buttons[i].label; // Return character value ('0'-'9', '+', '-', '*', '/', '=', 'C')
-         }
-      }
-   }
+
+int getButton() {
+
+    static bool ready = false;
+    static bool wasPressed = false;
+
+    uint16_t x = 0;
+    uint16_t y = 0;
+
+    bool touching = get_ts_lcd(&x, &y);
+
+    // Wait for touchscreen to be released
+    if (!touching) {
+        wasPressed = false;
+        ready = true;
+        return -1;
+    }
+
+    // Ignore startup touches and repeated presses
+    if (!ready || wasPressed) {
+        return -1;
+    }
+
+    wasPressed = true;
+
+    // Check which button was touched
+    for (int i = 0; i < 16; i++) {
+
+        if ((int)x >= buttons[i].x - 8 &&
+            (int)x < buttons[i].x + buttons[i].w + 8 &&
+            (int)y >= buttons[i].y - 5 &&
+            (int)y < buttons[i].y + buttons[i].h + 5){
+
+            return buttons[i].label;
+        }
+    }
 
     return -1;
 }
 
-//Updates the top display screen
+
+
+
+//Updates top display screen
 void displayResult(int32_t value){
    tft_fillRect(10, 5, 300, 35, ILI9340_BLACK);
    
@@ -107,8 +134,8 @@ void displayButtons(){
     tft_fillRect(220, 145, 60, 40, ILI9340_GREEN);  //*
 
     tft_fillRect(10, 195, 60, 40, ILI9340_WHITE); //0
-    tft_fillRect(150, 195, 60, 40, ILI9340_RED); //C
-    tft_fillRect(80, 195, 60, 40, ILI9340_BLUE); //=
+    tft_fillRect(80, 195, 60, 40, ILI9340_RED); //C
+    tft_fillRect(150, 195, 60, 40, ILI9340_BLUE); //=
     tft_fillRect(220, 195, 60, 40, ILI9340_GREEN); // /
 
    tft_setTextSize(3);

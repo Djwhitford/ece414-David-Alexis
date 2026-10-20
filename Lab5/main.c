@@ -1,9 +1,11 @@
+
 /*
 * Authors: Alexis and David
-* C file for main.c. This file combines the user interface and the calculator finite state machine to create a simple calculator application.
+* Main program for touchscreen calculator
 */
 
 #include <stdio.h>
+#include <stdint.h>
 #include "pico/stdlib.h"
 #include "Calc_FSM.h"
 #include "UserInterface.h"
@@ -11,30 +13,43 @@
 #include "TouchScreen.h"
 #include "ts_lcd.h"
 
-
-
-
 int main() {
-   
-   //global variables for the calculator
 
+    //input/output
     stdio_init_all();
+
+    // Initialize LCD
     tft_init_hw();
     tft_begin();
     tft_setRotation(3);
+
+    // Initialize touchscreen
+    ts_lcd_init();
+    sleep_ms(500);
+
+    // Draw calculator buttons
     displayButtons();
-    //displayResult(0);
-    displayError();
-    int button1_location;
-    int button2_location;
-    char operator_location;
 
-    while (true){
-        
-        //displayButtons();
-            //tft_fillRect(220, 95, 60, 40, ILI9340_GREEN);
+    // Initialize calculator state machine
+    calc_FSM(0, 0, '\0', '\0');
 
-        //calc_FSM(button1_location,  button2_location, operator_location);
+    while (true) {
 
+        // Get button 
+        int button = getButton();
+
+        // Process valid button presses
+        if (button != -1) {
+
+            // Send button to calc FSM
+            calc_FSM(0, 0, '\0', (char)button);
+
+            // Print button for debugging
+            printf("Button pressed: %c\n", (char)button);
+        }
+
+        sleep_ms(10);
     }
+
+    return 0;
 }

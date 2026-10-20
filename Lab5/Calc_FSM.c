@@ -8,67 +8,77 @@
 //declare variables
 
 state_t current_state = STATE_INIT;
+static int saved_number1 = 0;
+static int saved_number2 = 0;
+static char saved_operator = '\0';
 
+static void calculateResult();
 
-void calc_FSM(int number1, int number2, char operator){
+void calc_FSM(int number1, int number2, char operator, char button){
+    
+    // Check if clear
+    if(button == 'C'){
+        current_state = STATE_INIT;
+    }
+    
     switch(current_state) {
         case STATE_INIT:
-            // Initialize variables and set the state to WAITING_FOROP1
-            if(number1 != 0){
-                current_state = WAITING_FOR_OPERATOR;
-            }
-            
-        
-        
+            saved_number1 = 0;
+            saved_number2 = 0;
+            saved_operator = '\0';
+
+            displayResult(0);
+
+            current_state = WAITING_FOROP1;
             break;
         case WAITING_FOROP1:
-            // Wait for the first operand to be entered
-            if(number1 != 0){
+             // Is button pressed
+            if(button >= '0' && button <= '9'){
+
+                int digit = button - '0';
+
+                saved_number1 = saved_number1 * 10 + digit;
+
+                displayResult(saved_number1);
+            }
+
+            // Is operator pressed
+            if(button == '+' || button == '-' ||
+            button == '*' || button == '/'){
+
+                saved_operator = button;
                 current_state = WAITING_FOR_OPERATOR;
             }
-        
-        
             break;
+        
         case WAITING_FOR_OPERATOR:
-            // Wait for the operator to be entered
-            if(operator == '+' || operator == '-' || operator == '*' || operator == '/'){
+            // Wait for first digit of second number
+            if(button >= '0' && button <= '9'){
+                saved_number2 = button - '0';
+                displayResult(saved_number2);
                 current_state = WAITING_FOROP2;
             }
-        
-        
             break;
+              
         case WAITING_FOROP2:
-            // Wait for the second operand to be entered
-            if(number2 != 0){
+            // Build second number
+            if(button >= '0' && button <= '9'){
+                int digit = button - '0';
+                saved_number2 = saved_number2 * 10 + digit;
+                displayResult(saved_number2);
+            }
+            else if(button == '='){
                 current_state = DISPLAY_RESULT;
+                calculateResult();
             }
-        
             break;
+
+
         case DISPLAY_RESULT:
-            // Display the result of the calculation
-            if(operator == '+'){
-                displayResult(number1 + number2);
-            } else if(operator == '-'){
-                displayResult(number1 - number2);
-            } else if(operator == '*'){
-                displayResult(number1 * number2);
-            } else if(operator == '/'){
-                if(number2 != 0){
-                    displayResult(number1 / number2);
-                } else {
-                    current_state = ERROR_STATE;
-                }
-            }
-        
-        
+            // Wait until C is pressed
             break;
         case ERROR_STATE:
-            // Handle any errors that occur during the calculation
-            if(operator == '/' && number2 == 0){
-                displayError();
-            }
-        
-        
+            // Stay in error until C pressed
             break;
         
         default:
@@ -78,3 +88,24 @@ void calc_FSM(int number1, int number2, char operator){
     
     
 }//end of void calc fsm
+
+static void calculateResult(){ //helper function
+    if(saved_operator == '+'){
+        displayResult(saved_number1 + saved_number2);
+    }
+    else if(saved_operator == '-'){
+        displayResult(saved_number1 - saved_number2);
+    }
+    else if(saved_operator == '*'){
+        displayResult(saved_number1 * saved_number2);
+    }
+    else if(saved_operator == '/'){
+        if(saved_number2 != 0){
+            displayResult(saved_number1 / saved_number2);
+        }
+        else {
+            current_state = ERROR_STATE;
+            displayError();
+        }
+    }
+}

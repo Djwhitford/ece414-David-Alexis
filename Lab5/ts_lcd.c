@@ -140,11 +140,12 @@ bool get_ts_lcd(uint16_t *px, uint16_t *py)
     adc_gpio_init(XMbit);
     adc_select_input(XMchan);
 
-    sleep_us(10);
+    sleep_us(100); // Changed for buttons not working properly
 
     z = adc_read();
 
-    if (z <= 50 || z >= 4050)
+    // readings outside the expected touch range
+    if (z < 125 || z > 3800)
     {
         valid = 0;
     }
@@ -166,11 +167,13 @@ bool get_ts_lcd(uint16_t *px, uint16_t *py)
     if (y > Y_MAX)
         y = Y_MAX;
 
-    uint16_t old_px = (uint16_t)(((x - X_MIN) * (LCD_WIDTH - 1)) / (X_MAX - X_MIN));
-    uint16_t old_py = (uint16_t)(((y - Y_MIN) * (LCD_HEIGHT - 1)) / (Y_MAX - Y_MIN));
+    
+    uint16_t old_px = (uint16_t)(((x - X_MIN) * 319) / (X_MAX - X_MIN));
+    uint16_t old_py = (uint16_t)(((y - Y_MIN) * 239) / (Y_MAX - Y_MIN));
 
-    int screen_x = old_py;
-    int screen_y = (LCD_HEIGHT - 1) - old_px;
+    // Rotate coordinates for screen rotation 3
+    int screen_x = old_py * 319 / 239;
+    int screen_y = 239 - (old_px * 239 / 319);
 
     screen_x = (screen_x - 24) * 319 / (206 - 24);
     screen_y = (screen_y - 5) * 239 / (198 - 5);
