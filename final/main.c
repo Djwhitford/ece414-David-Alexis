@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "pico/stdlib.h"
-#include "Calc_FSM.h"
 #include "UserInterface.h"
 #include "TFTMaster.h"
 #include "TouchScreen.h"
@@ -27,10 +26,10 @@ int main() {
     ts_lcd_init();
     sleep_ms(500);
 
-    // Draw calculator buttons
-    displayButtons();
+    // Draw display screen
+    displayStartingScreen();
 
-    // Initialize calculator state machine
+    /* Initialize calculator state machine
     calc_FSM(0, 0, '\0', '\0');
 
     while (true) {
@@ -50,6 +49,7 @@ int main() {
 
         sleep_ms(10);
     }
+        */
 
     return 0;
 }

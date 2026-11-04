@@ -19,161 +19,40 @@
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
 
-//button struct, that containts a vuttons location, size, and value
-typedef struct {
-   int x;
-   int y;
-   int w;
-   int h;
-   int label;
-} Button;
-
-//button array
-static const Button buttons[16] = {
-    // Row 1
-    {10,  45, 60, 40, '7'},
-    {80,  45, 60, 40, '8'},
-    {150, 45, 60, 40, '9'},
-    {220, 45, 60, 40, '+'},
-
-    // Row 2
-    {10,  95, 60, 40, '4'},
-    {80,  95, 60, 40, '5'},
-    {150, 95, 60, 40, '6'},
-    {220, 95, 60, 40, '-'},
-
-    // Row 3
-    {10,  145, 60, 40, '1'},
-    {80,  145, 60, 40, '2'},
-    {150, 145, 60, 40, '3'},
-    {220, 145, 60, 40, '*'},
-
-    // Row 4
-    {10,  195, 60, 40, '0'},
-    {80,  195, 60, 40, 'C'},
-    {150, 195, 60, 40, '='},
-    {220, 195, 60, 40, '/'}
-};
-
-//Returns which button (if any) was pressed.
-
-
-
-int getButton() {
-
-    static bool ready = false;
-    static bool wasPressed = false;
-
-    uint16_t x = 0;
-    uint16_t y = 0;
-
-    bool touching = get_ts_lcd(&x, &y);
-
-    // Wait for touchscreen to be released
-    if (!touching) {
-        wasPressed = false;
-        ready = true;
-        return -1;
-    }
-
-    // Ignore startup touches and repeated presses
-    if (!ready || wasPressed) {
-        return -1;
-    }
-
-    wasPressed = true;
-
-    // Check which button was touched
-    for (int i = 0; i < 16; i++) {
-
-        if ((int)x >= buttons[i].x - 8 &&
-            (int)x < buttons[i].x + buttons[i].w + 8 &&
-            (int)y >= buttons[i].y - 5 &&
-            (int)y < buttons[i].y + buttons[i].h + 5){
-
-            return buttons[i].label;
-        }
-    }
-
-    return -1;
-}
-
-
-
-
-//Updates top display screen
-void displayResult(int32_t value){
-   tft_fillRect(10, 5, 300, 35, ILI9340_BLACK);
-   
-   char buffer[16];
-   snprintf(buffer, sizeof(buffer), "%ld", (long)value);
-   
-   tft_setTextColor(ILI9340_WHITE);
-   tft_setTextSize(3);
-   tft_setCursor(20, 10);
-   tft_writeString(buffer);
-}
-
 //Updates the bottom display screen
-void displayButtons(){
-   tft_fillScreen(ILI9340_BLACK); //Calculator background color
-
-   tft_fillRect(10, 45, 60, 40, ILI9340_WHITE); //7
-    tft_fillRect(80, 45, 60, 40, ILI9340_WHITE); //8
-    tft_fillRect(150, 45, 60, 40, ILI9340_WHITE); //9
-    tft_fillRect(220, 45, 60, 40, ILI9340_GREEN); //+
-   
-    tft_fillRect(10, 95, 60, 40, ILI9340_WHITE); //4
-    tft_fillRect(80, 95, 60, 40, ILI9340_WHITE); //5
-    tft_fillRect(150, 95, 60, 40, ILI9340_WHITE); //6
-    tft_fillRect(220, 95, 60, 40, ILI9340_GREEN);  //-
-
-    tft_fillRect(10, 145, 60, 40, ILI9340_WHITE);   //1
-    tft_fillRect(80, 145, 60, 40, ILI9340_WHITE);   //2
-    tft_fillRect(150, 145, 60, 40, ILI9340_WHITE);  //3
-    tft_fillRect(220, 145, 60, 40, ILI9340_GREEN);  //*
-
-    tft_fillRect(10, 195, 60, 40, ILI9340_WHITE); //0
-    tft_fillRect(80, 195, 60, 40, ILI9340_RED); //C
-    tft_fillRect(150, 195, 60, 40, ILI9340_BLUE); //=
-    tft_fillRect(220, 195, 60, 40, ILI9340_GREEN); // /
-
-   tft_setTextSize(3);
-   tft_setTextColor(ILI9340_BLACK);
-
-   //first row labels
-   tft_setCursor(32, 55);  tft_writeString("7");
-   tft_setCursor(102, 55); tft_writeString("8");
-   tft_setCursor(172, 55); tft_writeString("9");
-   tft_setCursor(242, 55); tft_writeString("+");
-   //second row labels
-   tft_setCursor(32, 105);  tft_writeString("4");
-   tft_setCursor(102, 105); tft_writeString("5");
-   tft_setCursor(172, 105); tft_writeString("6");
-   tft_setCursor(242, 105); tft_writeString("-"); 
-   //third row labels
-   tft_setCursor(32, 155);  tft_writeString("1");
-   tft_setCursor(102, 155); tft_writeString("2");
-   tft_setCursor(172, 155); tft_writeString("3");
-   tft_setCursor(242, 155); tft_writeString("x");
-   // row four labels
-   tft_setCursor(32, 205);  tft_writeString("0");
-   tft_setCursor(242, 205); tft_writeString("/");
+void displayStartingScreen(){
+   tft_fillScreen(ILI9340_YELLOW); //Starting screen background color
+   tft_setTextSize(5);
    tft_setTextColor(ILI9340_WHITE);
-   tft_setCursor(102, 205); tft_writeString("C");
-   tft_setCursor(172, 205); tft_writeString("=");
+   tft_setCursor(40, 100); tft_writeString("00:00.00");
+} //end of displayStartingScreen
 
-   
-   
-}
+void displayRunningScreen(){ //needs timer
+   tft_fillScreen(ILI9340_GREEN); //Running screen background color
+   tft_setTextSize(5);
+   tft_setTextColor(ILI9340_WHITE);
+   tft_setCursor(40, 100); tft_writeString("00:00.10");
+}//end of displayRunningScreen
 
-//Updates the top display screen with an error message
-void displayError(void){
-   tft_fillRect(10, 5, 300, 35, ILI9340_BLACK);
+void displayStoppedScreen(){ //needs stopped timer
+   tft_fillScreen(ILI9340_RED); //Stopped screen background color
+   tft_setTextSize(5);
+   tft_setTextColor(ILI9340_WHITE);
+   tft_setCursor(40, 100); tft_writeString("00:00.10");
+}//end of displayStoppedScreen
 
-   tft_setTextColor(ILI9340_RED);
-   tft_setTextSize(3);
-   tft_setCursor(20, 10);
-   tft_writeString("ERROR");
-}
+void displayResultsScreen(){ //needs stopped timer and calculations
+   tft_fillScreen(ILI9340_RED); //Results screen background color
+   tft_setTextSize(5);
+   tft_setTextColor(ILI9340_WHITE);
+   tft_setCursor(40, 20); tft_writeString("00:00.10");
+
+   tft_setTextSize(2);
+   tft_setCursor(10, 100); tft_writeString("Average Speed: 00.00 m/s");
+   tft_setCursor(10, 140); tft_writeString("Distance: 00.00 m");
+}//end of displayResultsScreen
+
+
+
+
 
