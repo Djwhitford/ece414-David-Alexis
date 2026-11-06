@@ -11,6 +11,7 @@
 #include "TFTMaster.h"
 #include "TouchScreen.h"
 #include "ts_lcd.h"
+#include "Display_FSM.h"
 
 int main() {
 
@@ -27,29 +28,15 @@ int main() {
     sleep_ms(500);
 
     // Draw display screen
-    displayStartingScreen();
+     bool breakbeam = false; // Simulated breakbeam state for testing
+     setBreakbeamActivated(breakbeam);
+    while (1) {
+       display_FSM(0);
+       sleep_ms(5000); // Add a small delay to avoid overwhelming the display
 
-    /* Initialize calculator state machine
-    calc_FSM(0, 0, '\0', '\0');
-
-    while (true) {
-
-        // Get button 
-        int button = getButton();
-
-        // Process valid button presses
-        if (button != -1) {
-
-            // Send button to calc FSM
-            calc_FSM(0, 0, '\0', (char)button);
-
-            // Print button for debugging
-            printf("Button pressed: %c\n", (char)button);
-        }
-
-        sleep_ms(10);
+         breakbeam = !breakbeam;
+         //setBreakbeamActivated(breakbeam); // Toggle the simulated breakbeam state
     }
-        */
 
     return 0;
 }
