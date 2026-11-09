@@ -1,7 +1,7 @@
 
 /*
 * Authors: Alexis and David
-* Main program for touchscreen calculator
+* Main program for touchscreen display and timing system.
 */
 
 #include <stdio.h>
@@ -12,6 +12,7 @@
 #include "TouchScreen.h"
 #include "ts_lcd.h"
 #include "Display_FSM.h"
+#include "timer.h"
 
 int main() {
 
@@ -26,17 +27,15 @@ int main() {
     // Initialize touchscreen
     ts_lcd_init();
     sleep_ms(500);
+    uint32_t last_time = 0;
 
     // Draw display screen
-     bool breakbeam = false; // Simulated breakbeam state for testing
-     setBreakbeamActivated(breakbeam);
-    while (1) {
-       display_FSM(0);
-       sleep_ms(5000); // Add a small delay to avoid overwhelming the display
+        uint32_t start_time = timer_read();
 
-         breakbeam = !breakbeam;
-         //setBreakbeamActivated(breakbeam); // Toggle the simulated breakbeam state
-    }
-
+        while (true) {
+            uint32_t elapsed_ms = timer_elapsed_ms(start_time, timer_read());
+            display_FSM(0, elapsed_ms);
+        }
+        
     return 0;
 }

@@ -20,6 +20,8 @@
 #include "timer.h"
 #include "pico/stdlib.h"
 #include "stdint.h"
+#include "stdio.h"
+#include "string.h"
 
 uint32_t timer_read() {
     return time_us_32();
@@ -35,4 +37,24 @@ uint32_t timer_elapsed_us(uint32_t t1, uint32_t t2) {
 // return the elapsed time in use betwen two 32-bit timestamps
 uint32_t timer_elapsed_ms(uint32_t t1, uint32_t t2) {
     return timer_elapsed_us(t1, t2) / 1000;
+}
+
+uint32_t timer_elapsed_min(uint32_t t1, uint32_t t2) {
+    return timer_elapsed_us(t1, t2) / 60000000;
+}
+
+uint32_t timer_elapsed_s(uint32_t t1, uint32_t t2) {
+    return timer_elapsed_us(t1, t2) / 1000000;
+}
+
+void timer_split_ms(uint32_t elapsed_ms, uint32_t *minutes, uint32_t *seconds, uint32_t *milliseconds) {
+    *minutes = elapsed_ms / 60000;
+    *seconds = (elapsed_ms / 1000) % 60;
+    *milliseconds = elapsed_ms % 1000;
+}
+
+void timer_format_time(uint32_t elapsed_ms, char *buffer, size_t buffer_size) {
+    uint32_t minutes, seconds, milliseconds;
+    timer_split_ms(elapsed_ms, &minutes, &seconds, &milliseconds);
+    snprintf(buffer, buffer_size, "%02u:%02u.%03u", minutes, seconds, milliseconds);
 }

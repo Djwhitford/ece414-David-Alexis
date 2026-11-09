@@ -10,6 +10,7 @@
 //Updates the bottom display screen
 void displayStartingScreen(void);
 void displayRunningScreen(void);
+void displayRunningTime(uint32_t elapsedTime);
 void displayStoppedScreen(void);
 void displayResultsScreen(void);
 

@@ -2,6 +2,7 @@
 #define DISPLAY_FSM_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef enum {
     STATE_INIT,
@@ -11,7 +12,7 @@ typedef enum {
     RESULTS_SCREEN,
 } screen_t;
 
-void display_FSM(int screen);
+void display_FSM(int screen, uint32_t elapsedTime);
 void setBreakbeamActivated(bool activated);
 
 #endif

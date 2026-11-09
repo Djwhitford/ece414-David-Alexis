@@ -9,6 +9,10 @@
 #include "TFTMaster.h"
 #include "userInterface.h"
 #include "TouchScreen.h"
+#include "timer.h"
+#include "Display_FSM.h" 
+
+
 
 // toushcreen calibration, to be changed later
 #define TS_MINX 150
@@ -27,11 +31,19 @@ void displayStartingScreen(){
    tft_setCursor(40, 100); tft_writeString("00:00.00");
 } //end of displayStartingScreen
 
-void displayRunningScreen(){ //needs timer
+void displayRunningScreen(void) {
    tft_fillScreen(ILI9340_GREEN); //Running screen background color
    tft_setTextSize(5);
-   tft_setTextColor(ILI9340_WHITE);
-   tft_setCursor(40, 100); tft_writeString("00:00.10");
+   tft_setTextColor2(ILI9340_WHITE, ILI9340_GREEN);
+}
+
+void displayRunningTime(uint32_t elapsedTime) {
+   char timeText[16];
+   timer_format_time(elapsedTime, timeText, sizeof(timeText));
+   tft_setTextSize(5);
+   tft_setTextColor2(ILI9340_WHITE, ILI9340_GREEN);
+   tft_setCursor(40, 100);
+   tft_writeString(timeText);
 }//end of displayRunningScreen
 
 void displayStoppedScreen(){ //needs stopped timer
