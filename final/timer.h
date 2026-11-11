@@ -36,4 +36,7 @@ void timer_split_ms(uint32_t elapsed_ms, uint32_t *minutes, uint32_t *seconds, u
 //Helper function to convert elapsed time in milliseconds to a string format "MM:SS.mmm"
 void timer_format_time(uint32_t elapsed_ms, char *buffer, size_t buffer_size);
 
+// Reset the timer by reading the current time and returning it
+void reset_timer();
+
 #endif

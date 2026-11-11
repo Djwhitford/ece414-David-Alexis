@@ -58,3 +58,7 @@ void timer_format_time(uint32_t elapsed_ms, char *buffer, size_t buffer_size) {
     timer_split_ms(elapsed_ms, &minutes, &seconds, &milliseconds);
     snprintf(buffer, buffer_size, "%02u:%02u.%03u", minutes, seconds, milliseconds);
 }
+
+void reset_timer() {
+    timer_read();
+}

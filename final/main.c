@@ -30,11 +30,11 @@ int main() {
     uint32_t last_time = 0;
 
     // Draw display screen
-        uint32_t start_time = timer_read();
+       
 
         while (true) {
-            uint32_t elapsed_ms = timer_elapsed_ms(start_time, timer_read());
-            display_FSM(0, elapsed_ms);
+            display_FSM(0);
+        
         }
         
     return 0;

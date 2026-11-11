@@ -64,7 +64,31 @@ void displayResultsScreen(){ //needs stopped timer and calculations
    tft_setCursor(10, 140); tft_writeString("Distance: 00.00 m");
 }//end of displayResultsScreen
 
+int getTouch() {
+    static bool ready = false;
+    static bool wasPressed = false;
 
+    uint16_t x = 0;
+    uint16_t y = 0;
+
+    bool touching = get_ts_lcd(&x, &y);
+
+    // Wait for touchscreen to be released
+    if (!touching) {
+        wasPressed = false;
+        ready = true;
+        return -1;
+    }
+
+    // Ignore startup touches and repeated presses
+    if (!ready || wasPressed) {
+        return -1;
+    }
+
+    wasPressed = true;
+
+    return -1;
+}
 
 
 

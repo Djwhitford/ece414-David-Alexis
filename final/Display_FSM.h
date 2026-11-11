@@ -12,7 +12,7 @@ typedef enum {
     RESULTS_SCREEN,
 } screen_t;
 
-void display_FSM(int screen, uint32_t elapsedTime);
+void display_FSM(int screen);
 void setBreakbeamActivated(bool activated);
 
 #endif
